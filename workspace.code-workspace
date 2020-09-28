@@ -1,0 +1,12 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "terminal.integrated.windowsEnableConpty": false,
+        "editor.wordBasedSuggestions": false,
+        "editor.snippetSuggestions": "top"
+    }
+}
