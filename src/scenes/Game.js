@@ -7,12 +7,15 @@ class Game extends Phaser.Scene {
   
   preload() {
     this.load.image('knight', 'assets/mage/mage.png');
-    this.load.spritesheet('idle-spritesheet', 'assets/mage/idle/idle.png', { frameWidth: 85, frameHeight: 128 });
-    this.load.spritesheet('walk-spritesheet', 'assets/mage/walk/walk.png', { frameWidth: 85, frameHeight: 128 });
-    this.load.spritesheet('jump-spritesheet', 'assets/mage/jump/jump.png', { frameWidth: 85, frameHeight: 128 });
-    this.load.spritesheet('high-jump-spritesheet', 'assets/mage/high_jump/high_jump.png', { frameWidth: 85, frameHeight: 128 });
-    this.load.spritesheet('run-spritesheet', 'assets/mage/run/run.png', { frameWidth: 85, frameHeight: 128 });
-    this.load.spritesheet('fall-spritesheet', 'assets/mage/fall/fall.png', { frameWidth: 85, frameHeight: 128 });
+    this.load.spritesheet('idle-spritesheet', 'assets/mage/idle/idle.png', { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('walk-spritesheet', 'assets/mage/walk/walk.png', { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('jump-spritesheet', 'assets/mage/jump/jump.png', { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('high-jump-spritesheet', 'assets/mage/high_jump/high_jump.png', { frameWidth: 171, frameHeight: 128 });//43 added to the left
+    this.load.spritesheet('run-spritesheet', 'assets/mage/run/run.png', { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('fall-spritesheet', 'assets/mage/fall/fall.png', { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('attack-spritesheet', 'assets/mage/attack/attack.png', { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('fire-move-spritesheet', 'assets/mage/fire_extra/fire-move.png', { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet('fire-explosion-spritesheet', 'assets/mage/fire_extra/fire-explosion.png', { frameWidth: 128, frameHeight: 128 });
 
     this.load.tilemapTiledJSON('level1', 'assets/tilemaps.json');
     this.load.image('level1-sheet', 'assets/tiles/tiles.png ');
@@ -29,6 +32,7 @@ class Game extends Phaser.Scene {
   keyRight;
   keyShift;
   keySpace;
+  keyX;
 
   create(data) {
     
@@ -36,6 +40,7 @@ class Game extends Phaser.Scene {
     this.keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     this.keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
     this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
     this.anims.create({
       key: 'hero-idle',
@@ -81,6 +86,27 @@ class Game extends Phaser.Scene {
       frameRate: 10,
       repeat: 0,
     });
+
+    this.anims.create({
+      key: 'hero-attack',
+      frames: this.anims.generateFrameNumbers('attack-spritesheet', {}),
+      frameRate: 20,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: 'bullet-move',
+      frames: this.anims.generateFrameNumbers('fire-move-spritesheet', {}),
+      frameRate: 20,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'bullet-explosion',
+      frames: this.anims.generateFrameNumbers('fire-explosion-spritesheet', {}),
+      frameRate: 20,
+      repeat: 0,
+    });
   
 
     this.addMap();
@@ -94,7 +120,7 @@ class Game extends Phaser.Scene {
 
     if(this.hero.body instanceof Phaser.Physics.Arcade.Body) {
       this.hero.body.setSize(33, 54);
-      this.hero.body.setOffset(27,57);
+      this.hero.body.setOffset(70,57);
       this.hero.body.setCollideWorldBounds(true);
       this.hero.body.setDragX(2000);//1150
       this.hero.body.setMaxVelocity(200, 400);
@@ -157,83 +183,168 @@ class Game extends Phaser.Scene {
 
   }
 
-  state = 'idle';
+  startFire() {
+    this.animState = 'after-attack';
+    var bullet = this.physics.add.sprite(this.hero.x, this.hero.y + 10, 'fire-move-spritesheet');
+    bullet.anims.play('bullet-move');
+    bullet.body.setAllowGravity(false)
+    this.isAttackAnimation = false;
+    bullet.body.setSize(25, 39);
+    if(this.hero.flipX) {
+      bullet.setFlipX(true);
+      bullet.body.setVelocityX(-400);
+      bullet.x = bullet.x - 50;
+      bullet.body.setOffset(128-44-25,54);
+    } else {
+      bullet.body.setVelocityX(400);
+      bullet.x = bullet.x + 50;
+      bullet.body.setOffset(44,54);
+    }
+
+    
+
+    var tile = this.groudLayer.getTileAtWorldXY(bullet.x - (128/2 - bullet.body.offset.x), bullet.y - (128/2 - bullet.body.offset.y));
+    var tile2 = this.groudLayer.getTileAtWorldXY(bullet.x - (128/2 - bullet.body.offset.x) , bullet.y + (bullet.body.offset.y + bullet.body.height - 128/2));
+    if (tile || tile2) {
+      bullet.body.setVelocityX(0);
+      this.bulletColided(bullet);
+      return;
+    }
+    // const platform2 = this.add.rectangle(bullet.x - (128/2 - bullet.body.offset.x), bullet.y - (128/2 - bullet.body.offset.y), 10, 10, 0x4BCB7C);
+    // this.physics.add.existing(platform2, true);
+    // const platform = this.add.rectangle(bullet.x - (128/2 - bullet.body.offset.x) , bullet.y + (bullet.body.offset.y + bullet.body.height - 128/2), 10, 10, 0x0000ff);
+    // this.physics.add.existing(platform, true);
+
+
+    this.physics.add.collider(bullet, this.groudLayer, this.bulletColided, null, this);
+    
+    bullet.body.setCollideWorldBounds(true);
+    bullet.body.onWorldBounds = true;
+
+    bullet.body.world.once(Phaser.Physics.Arcade.Events.WORLD_BOUNDS, () => {
+      this.bulletColided(bullet);
+    }, this);
+
+  }
+
+
+  bulletColided(o1, o2) {
+    // if(! (o1 instanceof Phaser.Physics.Arcade.Sprite)) {
+    //   o1 = o1.gameObject;
+    // }
+    if(!o1.anims) {
+      o1.destroy();
+      return;
+    }
+    o1.anims.play('bullet-explosion');
+    this.hero.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
+      o1.setVisible(false);
+      o1.destroy()
+    });
+  }
+
+  heroState = 'idle';
+  animState = 'idle';
+  lastFire = 0;
 
   update() {
     if(!(this.hero.body instanceof Phaser.Physics.Arcade.Body)) {
       return;
     }
-    if(this.keyLeft.isUp && this.keyRight.isUp && this.hero.body.onFloor() && this.state != 'idle') {
-      this.state = 'idle';
+    if(this.keyLeft.isUp && this.keyRight.isUp && this.hero.body.onFloor()) {
+      this.heroState = 'idle';
       this.hero.body.setAccelerationX(0);
+    }
+
+    if(this.heroState == 'idle' && this.animState != 'idle' && this.animState != 'attack') {
       this.hero.anims.play('hero-idle');
+      this.animState = 'idle';
     }
     
+    if(this.keyX.isDown && Date.now() - this.lastFire > 1000){
+      this.hero.anims.play('hero-attack');
+      this.isAttackAnimation = true;
+      this.hero.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, this.startFire, this);
+      this.lastFire = Date.now();
+    }
+
     if(this.keyLeft.isDown && this.hero.body.onFloor() && this.keyShift.isUp) {
       this.hero.body.setMaxVelocity(200, 400);
       this.hero.body.setAccelerationX(-500);
-      this.hero.body.setOffset(85-27-33,57);
+      this.hero.body.setOffset(171-70-33,57);
       this.hero.setFlipX(true);
-      if(this.state != 'walk') {
-        this.hero.anims.play('hero-walk');
-      }
-      this.state = 'walk';
+      this.heroState = 'walk';
     } 
     
     if(this.keyLeft.isDown && this.hero.body.onFloor() && this.keyShift.isDown) {
       this.hero.body.setMaxVelocity(400, 400);
       this.hero.body.setAccelerationX(-500);
-      this.hero.body.setOffset(85-27-33, 57);
+      this.hero.body.setOffset(171-70-33,57);
       this.hero.setFlipX(true);
-      if(this.state != 'run') {
-        this.hero.anims.play('hero-run');
-      }
-      this.state = 'run';
+      this.heroState = 'run';
     }
 
     if(this.keyRight.isDown && this.hero.body.onFloor() && this.keyShift.isUp) {
       this.hero.body.setMaxVelocity(200, 400);
       this.hero.body.setAccelerationX(500);
-      this.hero.body.setOffset(27,57);
+      this.hero.body.setOffset(70,57);
       this.hero.setFlipX(false);
-      if(this.state != 'walk') {
-        this.hero.anims.play('hero-walk');
-      }
-      this.state = 'walk';
+      this.heroState = 'walk';
+
     }
 
     if(this.keyRight.isDown && this.hero.body.onFloor() && this.keyShift.isDown) {
       this.hero.body.setMaxVelocity(400, 400);
       this.hero.body.setAccelerationX(500);
-      this.hero.body.setOffset(27,57);
+      this.hero.body.setOffset(70,57);
       this.hero.setFlipX(false);
-      if(this.state != 'run') {
-        this.hero.anims.play('hero-run');
-      }
-      this.state = 'run';
-    }
+      this.heroState = 'run';
+   }
+
+   if(this.heroState == 'walk' && this.animState != 'walk' && this.animState != 'attack') {
+    this.animState = 'walk';
+    this.hero.anims.play('hero-walk');      
+  }
+
+  if(this.heroState == 'run' && this.animState != 'run' && this.animState != 'attack') {
+      this.animState = 'run';
+      this.hero.anims.play('hero-run');
+  }
 
     var justDown = Phaser.Input.Keyboard.JustDown(this.keySpace);
 
-    if(justDown && this.state != 'jump' && this.state != 'high-jump') {
+    if(justDown && this.heroState != 'jump' && this.heroState != 'high-jump' && this.heroState != 'fall') {
       this.hero.body.setVelocityY(-250);
-      this.state = 'jump';
       justDown = false;
-      this.hero.anims.play('hero-jump');
+      this.heroState = 'jump';
     }
 
-    if(justDown && this.state == 'jump') {
+    if(this.heroState == 'jump' && this.animState != 'jump' && this.animState != 'attack') {
+      this.animState = 'jump';
+      this.hero.anims.play('hero-jump');    
+    }
+
+    if(justDown && this.heroState == 'jump') {
       this.hero.body.setVelocityY(-400);
-      this.state = 'high-jump';
-      this.hero.anims.play('hero-high-jump');
+      this.heroState = 'high-jump';
+      
     }
 
-    if(!this.hero.body.onFloor() && !(this.state == 'jump' || this.state == 'high-jump') && this.hero.body.velocity.y > 0 && this.state != 'fall') {
-      this.state = 'fall';
-      this.hero.anims.play('hero-fall');
+    if(this.heroState == 'high-jump' && this.animState != 'high-jump' && this.animState != 'attack') {
+      this.animState = 'high-jump';
+      this.hero.anims.play('hero-high-jump');   
     }
 
-    if(this.state == 'jump' || this.state == 'high-jump' || this.state == 'fall') {
+    if(!this.hero.body.onFloor() && !(this.heroState == 'jump' || this.heroState == 'high-jump') && this.hero.body.velocity.y > 0 && this.heroState != 'fall' && !this.isAttackAnimation) {
+      this.heroState = 'fall';
+    }
+
+    if(this.heroState == 'fall' && this.animState != 'fall' && this.animState != 'attack') {
+      this.animState = 'fall';
+      this.hero.anims.play('hero-fall');   
+    }
+
+    if(this.heroState == 'jump' || this.heroState == 'high-jump' || this.heroState == 'fall') {
       if(this.keyRight.isDown) {
         this.hero.setFlipX(false);
         this.hero.body.setAccelerationX(500);
@@ -245,7 +356,7 @@ class Game extends Phaser.Scene {
     }
 
 
-    //console.log(this.state);
+    console.log(this.heroState);
 
   }
 
