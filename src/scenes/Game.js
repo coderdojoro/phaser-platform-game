@@ -60,7 +60,7 @@ class Game extends Phaser.Scene {
     this.anims.create({
       key: 'hero-high-jump',
       frames: this.anims.generateFrameNumbers('high-jump-spritesheet', {}),
-      frameRate: 10,//7
+      frameRate: 20,//7
       repeat: 0,
     });
 
