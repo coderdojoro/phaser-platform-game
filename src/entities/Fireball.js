@@ -8,7 +8,7 @@ class Fireball extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this)
         this.anims.play('bullet-move');
-        this.body.setAllowGravity(false)
+        this.body.setAllowGravity(false);
 
         this.body.setSize(25, 39);
         if (flipped) {
