@@ -26,6 +26,8 @@ class Game extends Phaser.Scene {
     this.load.image('background3', 'assets/backgrounds/background3.png');
     this.load.image('background2', 'assets/backgrounds/background2.png');
     this.load.image('background1', 'assets/backgrounds/background1.png');
+
+    this.load.image('keys-text', 'assets/keys.png');
   }
   
   
@@ -102,16 +104,6 @@ class Game extends Phaser.Scene {
 
     this.hero = new Hero(this, 80, 700);
  
-    this.add.existing(this.hero);
-    this.physics.add.existing(this.hero);
-
-    
-      this.hero.body.setSize(33, 54);
-      this.hero.body.setOffset(70,57);
-      this.hero.body.setCollideWorldBounds(true);
-      this.hero.body.setDragX(2000);//1150
-      this.hero.body.setMaxVelocity(200, 400);
-  
     this.children.moveTo(this.hero, this.children.getIndex(this.map.getLayer('foreground').tilemapLayer));
 
     this.physics.add.collider(this.hero, this.groudLayer);
@@ -135,6 +127,9 @@ class Game extends Phaser.Scene {
     // this.physics.add.existing(platform4, true);
     // this.physics.add.collider(this.hero, platform4);
 
+    var image = this.add.image(1050, 10, 'keys-text');
+    image.setOrigin(0, 0);
+    image.setScrollFactor(0);
   }
 
   addMap() {
