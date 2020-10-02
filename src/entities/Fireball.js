@@ -13,11 +13,11 @@ class Fireball extends Phaser.GameObjects.Sprite {
         this.body.setSize(25, 39);
         if (flipped) {
             this.setFlipX(true);
-            this.body.setVelocityX(-400);
+            this.body.setVelocityX(-600);
             this.x = this.x - 50;
             this.body.setOffset(128 - 44 - 25, 54);
         } else {
-            this.body.setVelocityX(400);
+            this.body.setVelocityX(600);
             this.x = this.x + 50;
             this.body.setOffset(44, 54);
         }

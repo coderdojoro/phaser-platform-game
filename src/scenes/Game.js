@@ -53,14 +53,14 @@ class Game extends Phaser.Scene {
     this.anims.create({
       key: 'hero-jump',
       frames: this.anims.generateFrameNumbers('jump-spritesheet', {}),
-      frameRate: 5,
+      frameRate: 10,//5
       repeat: 0,
     });
 
     this.anims.create({
       key: 'hero-high-jump',
       frames: this.anims.generateFrameNumbers('high-jump-spritesheet', {}),
-      frameRate: 7,
+      frameRate: 10,//7
       repeat: 0,
     });
 
@@ -74,14 +74,14 @@ class Game extends Phaser.Scene {
     this.anims.create({
       key: 'hero-fall',
       frames: this.anims.generateFrameNumbers('fall-spritesheet', {}),
-      frameRate: 5,
+      frameRate: 10,//5
       repeat: 0,
     });
 
     this.anims.create({
       key: 'hero-attack',
       frames: this.anims.generateFrameNumbers('attack-spritesheet', {}),
-      frameRate: 7,
+      frameRate: 15,//7
       repeat: 0,
     });
 
@@ -127,8 +127,9 @@ class Game extends Phaser.Scene {
     // this.physics.add.existing(platform4, true);
     // this.physics.add.collider(this.hero, platform4);
 
-    var image = this.add.image(1050, 10, 'keys-text');
+    var image = this.add.image(950, 10, 'keys-text');
     image.setOrigin(0, 0);
+    //image.setScale(0.3);
     image.setScrollFactor(0);
   }
 
