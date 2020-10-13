@@ -40,7 +40,7 @@ class Hero extends Phaser.GameObjects.Sprite {
         super.preUpdate(time, delta);
         this.updateHeroState();
         this.updateAnimationState();
-        //console.log("hero: " + this.heroState + ", animation: " + this.animState);
+        //console.log("hero: " + this.heroState + ", animation: " + this.animState); 
     }
 
     updateHeroState() {

@@ -6,7 +6,7 @@ import Hero from '../entities/Hero';
 
 class Game extends Phaser.Scene {
   
-  preload() {
+  preload() { 
     this.load.image('knight', 'assets/mage/mage.png');
     this.load.spritesheet('idle-spritesheet', 'assets/mage/idle/idle.png', { frameWidth: 171, frameHeight: 128 });
     this.load.spritesheet('walk-spritesheet', 'assets/mage/walk/walk.png', { frameWidth: 171, frameHeight: 128 });
