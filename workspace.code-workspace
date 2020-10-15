@@ -7,6 +7,8 @@
     "settings": {
         "terminal.integrated.windowsEnableConpty": false,
         "editor.wordBasedSuggestions": false,
+		"git.postCommitCommand": "push",
+		"git.enableSmartCommit": true,
         "editor.snippetSuggestions": "top",
 		"editor.autoSurround": "never"
     }
