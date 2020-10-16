@@ -5,6 +5,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => ({
+  devServer: {
+    port: 8080
+  },
   entry: {
     app: path.resolve(__dirname, './src/index.js'),
     vendor: ['phaser'],
