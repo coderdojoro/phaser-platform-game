@@ -12,5 +12,7 @@
         "editor.snippetSuggestions": "top",
         "editor.autoSurround": "never",
         "files.autoSave": "onFocusChange"
+        //"files.autoSave": "afterDelay",
+        //"files.autoSaveDelay": 900
     }
 }
