@@ -10,7 +10,7 @@ class Hero extends Phaser.GameObjects.Sprite {
     keySpace;
     keyX;
 
-    heroState = 'idle';
+    heroState = 'fall';
     animState = 'idle';
     lastFire = 0;
 
@@ -21,6 +21,10 @@ class Hero extends Phaser.GameObjects.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
+
+        if(!(this.body instanceof Phaser.Physics.Arcade.Body)) {
+            throw "Not body";
+        }
 
         this.body.setSize(33, 54);
         this.body.setOffset(70, 57);
@@ -40,16 +44,27 @@ class Hero extends Phaser.GameObjects.Sprite {
         super.preUpdate(time, delta);
         this.updateHeroState();
         this.updateAnimationState();
-        //console.log("hero: " + this.heroState + ", animation: " + this.animState); 
+        // console.log("hero: " + this.heroState + ", animation: " + this.animState); 
     }
 
     updateHeroState() {
-        if (this.keyLeft.isUp && this.keyRight.isUp && (this.body.velocity.y == 0 && this.body.onFloor())) {
-            this.heroState = 'idle';
-            this.body.setAccelerationX(0);
+
+        if(!(this.body instanceof Phaser.Physics.Arcade.Body)) {
+            return;
         }
 
-        if (this.keyLeft.isDown && this.keyShift.isUp && (this.body.velocity.y == 0 && this.body.onFloor())) {
+        let isOnFloor = this.body.velocity.y == 0 && this.body.onFloor();
+
+        if (this.keyLeft.isUp && this.keyRight.isUp && isOnFloor && this.heroState != 'landing') {
+            if(this.heroState == 'jump' || this.heroState == 'high-jump' || this.heroState == 'fall') {
+                this.heroState = 'landing';    
+            } else {
+                this.heroState = 'idle';
+                this.body.setAccelerationX(0);
+            }
+        }
+
+        if (this.keyLeft.isDown && this.keyShift.isUp && isOnFloor) {
             this.body.setMaxVelocity(200, 400);
             this.body.setAccelerationX(-500);
             this.body.setOffset(171 - 70 - 33, 57);
@@ -57,7 +72,7 @@ class Hero extends Phaser.GameObjects.Sprite {
             this.heroState = 'walk';
         }
 
-        if (this.keyLeft.isDown && this.keyShift.isDown && (this.body.velocity.y == 0 && this.body.onFloor())) {
+        if (this.keyLeft.isDown && this.keyShift.isDown && isOnFloor) {
             this.body.setMaxVelocity(400, 400);
             this.body.setAccelerationX(-500);
             this.body.setOffset(171 - 70 - 33, 57);
@@ -65,7 +80,7 @@ class Hero extends Phaser.GameObjects.Sprite {
             this.heroState = 'run';
         }
 
-        if (this.keyRight.isDown && this.keyShift.isUp && (this.body.velocity.y == 0 && this.body.onFloor())) {
+        if (this.keyRight.isDown && this.keyShift.isUp && isOnFloor) {
             this.body.setMaxVelocity(200, 400);
             this.body.setAccelerationX(500);
             this.body.setOffset(70, 57);
@@ -74,7 +89,7 @@ class Hero extends Phaser.GameObjects.Sprite {
 
         }
 
-        if (this.keyRight.isDown && this.keyShift.isDown && (this.body.velocity.y == 0 && this.body.onFloor())) {
+        if (this.keyRight.isDown && this.keyShift.isDown && isOnFloor) {
             this.body.setMaxVelocity(400, 400);
             this.body.setAccelerationX(500);
             this.body.setOffset(70, 57);
@@ -106,6 +121,16 @@ class Hero extends Phaser.GameObjects.Sprite {
                 this.body.setAccelerationX(-500);
             }
         }
+
+        // if (this.heroState == 'landing') {
+        //     if(this.animState != 'landing') {
+        //         this.langingAnimTimer = Date.now();
+        //     } else {
+        //         if(Date.now() - this.langingAnimTimer > 1000) {
+        //             this.heroState = 'idle';
+        //         }
+        //     }
+        // }
     }
 
     updateAnimationState() {
@@ -145,6 +170,13 @@ class Hero extends Phaser.GameObjects.Sprite {
         if (this.heroState == 'fall' && this.animState != 'fall' && this.animState != 'attack') {
             this.animState = 'fall';
             this.anims.play('hero-fall');
+        }
+        if (this.heroState == 'landing' && this.animState != 'landing') {
+            this.animState = 'landing';
+            this.anims.play('hero-landing');
+            this.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
+                this.heroState = 'idle';
+            })
         }
     }
 

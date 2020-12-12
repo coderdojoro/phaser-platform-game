@@ -17,6 +17,7 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('attack-spritesheet', 'assets/mage/attack/attack.png', { frameWidth: 171, frameHeight: 128 });
     this.load.spritesheet('fire-move-spritesheet', 'assets/mage/fire_extra/fire-move.png', { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet('fire-explosion-spritesheet', 'assets/mage/fire_extra/fire-explosion.png', { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet('landing-spritesheet', 'assets/mage/landing/landing.png', { frameWidth: 171, frameHeight: 128 });
 
     this.load.tilemapTiledJSON('level1', 'assets/tilemaps.json');
     this.load.image('level1-sheet', 'assets/tiles/tiles.png ');
@@ -96,6 +97,13 @@ class Game extends Phaser.Scene {
       key: 'bullet-explosion',
       frames: this.anims.generateFrameNumbers('fire-explosion-spritesheet', {}),
       frameRate: 20,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: 'hero-landing',
+      frames: this.anims.generateFrameNumbers('landing-spritesheet', {}),
+      frameRate: 10,
       repeat: 0,
     });
   
