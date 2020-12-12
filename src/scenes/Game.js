@@ -5,19 +5,21 @@ import Phaser from 'phaser';
 import Hero from '../entities/Hero';
 
 class Game extends Phaser.Scene {
-  
+
+  heroType = Hero.HeroTypes.MAGE;
+
   preload() {
-    this.load.image('knight', 'assets/mage/mage.png');
-    this.load.spritesheet('idle-spritesheet', 'assets/mage/idle/idle.png', { frameWidth: 171, frameHeight: 128 });
-    this.load.spritesheet('walk-spritesheet', 'assets/mage/walk/walk.png', { frameWidth: 171, frameHeight: 128 });
-    this.load.spritesheet('jump-spritesheet', 'assets/mage/jump/jump.png', { frameWidth: 171, frameHeight: 128 });
-    this.load.spritesheet('high-jump-spritesheet', 'assets/mage/high_jump/high_jump.png', { frameWidth: 171, frameHeight: 128 });//43 added to the left
-    this.load.spritesheet('run-spritesheet', 'assets/mage/run/run.png', { frameWidth: 171, frameHeight: 128 });
-    this.load.spritesheet('fall-spritesheet', 'assets/mage/fall/fall.png', { frameWidth: 171, frameHeight: 128 });
-    this.load.spritesheet('attack-spritesheet', 'assets/mage/attack/attack.png', { frameWidth: 171, frameHeight: 128 });
-    this.load.spritesheet('fire-move-spritesheet', 'assets/mage/fire_extra/fire-move.png', { frameWidth: 128, frameHeight: 128 });
-    this.load.spritesheet('fire-explosion-spritesheet', 'assets/mage/fire_extra/fire-explosion.png', { frameWidth: 128, frameHeight: 128 });
-    this.load.spritesheet('landing-spritesheet', 'assets/mage/landing/landing.png', { frameWidth: 171, frameHeight: 128 });
+    this.load.image('knight', `assets/${this.heroType}/${this.heroType}.png`);
+    this.load.spritesheet('idle-spritesheet', `assets/${this.heroType}/idle.png`, { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('walk-spritesheet', `assets/${this.heroType}/walk.png`, { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('jump-spritesheet', `assets/${this.heroType}/jump.png`, { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('double-jump-spritesheet', `assets/${this.heroType}/double-jump.png`, { frameWidth: 171, frameHeight: 128 });//43 added to the left
+    this.load.spritesheet('run-spritesheet', `assets/${this.heroType}/run.png`, { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('fall-spritesheet', `assets/${this.heroType}/fall.png`, { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('attack-spritesheet', `assets/${this.heroType}/attack.png`, { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('fire-move-spritesheet', `assets/${this.heroType}/fire-move.png`, { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet('fire-explosion-spritesheet', `assets/${this.heroType}/fire-explosion.png`, { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet('landing-spritesheet', `assets/${this.heroType}/landing.png`, { frameWidth: 171, frameHeight: 128 });
 
     this.load.tilemapTiledJSON('level1', 'assets/tilemaps.json');
     this.load.image('level1-sheet', 'assets/tiles/tiles.png ');
@@ -59,8 +61,8 @@ class Game extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: 'hero-high-jump',
-      frames: this.anims.generateFrameNumbers('high-jump-spritesheet', {}),
+      key: 'hero-double-jump',
+      frames: this.anims.generateFrameNumbers('double-jump-spritesheet', {}),
       frameRate: 20,//7
       repeat: 0,
     });
@@ -110,7 +112,7 @@ class Game extends Phaser.Scene {
 
     this.addMap();
 
-    this.hero = new Hero(this, 80, 700);
+    this.hero = new Hero(this, 80, 700, this.heroType);
  
     this.children.moveTo(this.hero, this.children.getIndex(this.map.getLayer('foreground').tilemapLayer));
 

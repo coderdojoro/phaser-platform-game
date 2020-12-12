@@ -4,6 +4,11 @@ import Fireball from '../entities/Fireball';
 
 class Hero extends Phaser.GameObjects.Sprite {
 
+    static HeroTypes = Object.freeze({
+        MAGE: "mage",
+        ROGUE: "rogue" 
+    });
+
     keyLeft;
     keyRight;
     keyShift;
@@ -14,10 +19,13 @@ class Hero extends Phaser.GameObjects.Sprite {
     animState = 'idle';
     lastFire = 0;
 
-    constructor(scene, x, y) {
+    heroType;
+
+    constructor(scene, x, y, heroType) {
         super(scene, x, y, 'idle-spritesheet');
 
         this.scene = scene;
+        this.heroType = heroType;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -26,8 +34,14 @@ class Hero extends Phaser.GameObjects.Sprite {
             throw "Not body";
         }
 
-        this.body.setSize(33, 54);
-        this.body.setOffset(70, 57);
+        if(this.heroType == Hero.HeroTypes.MAGE) {
+            this.body.setSize(33, 54);
+            this.body.setOffset(70, 57);
+        } else if(this.heroType == Hero.HeroTypes.ROGUE) {
+            this.body.setSize(31, 52);
+            this.body.setOffset(74, 52);
+        }
+
         this.body.setCollideWorldBounds(true);
         this.body.setDragX(2000);//1150
         this.body.setMaxVelocity(200, 400);
@@ -56,11 +70,11 @@ class Hero extends Phaser.GameObjects.Sprite {
         let isOnFloor = this.body.velocity.y == 0 && this.body.onFloor();
 
         if (this.keyLeft.isUp && this.keyRight.isUp && isOnFloor && this.heroState != 'landing') {
+            this.body.setAccelerationX(0);
             if(this.heroState == 'jump' || this.heroState == 'high-jump' || this.heroState == 'fall') {
                 this.heroState = 'landing';    
             } else {
                 this.heroState = 'idle';
-                this.body.setAccelerationX(0);
             }
         }
 
@@ -144,7 +158,9 @@ class Hero extends Phaser.GameObjects.Sprite {
             this.animState = 'attack';
             this.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
                 this.animState = 'after-attack';
-                new Fireball(this.scene, this.x, this.y, this.flipX);
+                if(this.heroType == Hero.HeroTypes.MAGE) {
+                    new Fireball(this.scene, this.x, this.y, this.flipX);
+                }
             }, this.scene);
             this.lastFire = Date.now();
         }
@@ -165,7 +181,7 @@ class Hero extends Phaser.GameObjects.Sprite {
         }
         if (this.heroState == 'high-jump' && this.animState != 'high-jump' && this.animState != 'attack') {
             this.animState = 'high-jump';
-            this.anims.play('hero-high-jump');
+            this.anims.play('hero-double-jump');
         }
         if (this.heroState == 'fall' && this.animState != 'fall' && this.animState != 'attack') {
             this.animState = 'fall';
