@@ -6,7 +6,7 @@ import Hero from '../entities/Hero';
 
 class Game extends Phaser.Scene {
 
-  heroType = Hero.HeroTypes.KNIGHT;
+  heroType = Hero.HeroTypes.ROGUE;
 
   preload() {
     this.load.image('knight', `assets/${this.heroType}/${this.heroType}.png`);
@@ -33,14 +33,14 @@ class Game extends Phaser.Scene {
 
     this.load.image('keys-text', 'assets/keys.png');
   }
-  
-  
+
+
   create(data) {
-    
+
     this.anims.create({
       key: 'hero-idle',
-      frames:[
-      { frame: 0, key: 'knight', duration: 5000 }, 
+      frames: [
+        { frame: 0, key: 'knight', duration: 5000 },
         ...this.anims.generateFrameNumbers('idle-spritesheet', {})
       ],
       frameRate: 6,
@@ -109,12 +109,12 @@ class Game extends Phaser.Scene {
       frameRate: 10,
       repeat: 0,
     });
-  
+
 
     this.addMap();
 
     this.hero = new Hero(this, 80, 700, this.heroType);
- 
+
     this.children.moveTo(this.hero, this.children.getIndex(this.map.getLayer('foreground').tilemapLayer));
 
     this.physics.add.collider(this.hero, this.groudLayer);
@@ -125,7 +125,7 @@ class Game extends Phaser.Scene {
     // const platform = this.add.rectangle(220, 500, 260, 10, 0x4BCB7C);
     // this.physics.add.existing(platform, true);
     // this.physics.add.collider(this.hero, platform);
-    
+
     // const platform2 = this.add.rectangle(320, 300, 260, 10, 0x4BCB7C);
     // this.physics.add.existing(platform2, true);
     // this.physics.add.collider(this.hero, platform2);
@@ -145,10 +145,10 @@ class Game extends Phaser.Scene {
   }
 
   addMap() {
-    this.map = this.make.tilemap({key: 'level1'});
+    this.map = this.make.tilemap({ key: 'level1' });
     this.groundTiles = this.map.addTilesetImage('level1' /*tileset name from jsom*/, 'level1-sheet');
     this.groundTiles2 = this.map.addTilesetImage('bushes', 'brush-sheet');
-    
+
     this.background4 = this.map.addTilesetImage('background4', 'background4');
     this.background3 = this.map.addTilesetImage('background3', 'background3');
     this.background2 = this.map.addTilesetImage('background2', 'background2');
@@ -169,8 +169,8 @@ class Game extends Phaser.Scene {
     this.groudLayer.setCollisionBetween(1, 150, true); //64
 
     this.map.createStaticLayer('foreground' /*layer name from json*/, [this.groundTiles, this.groundTiles2]);
-    
-    
+
+
     // var debug = this.add.graphics();
     // this.groudLayer.renderDebug(debug, {});
 
@@ -182,7 +182,7 @@ class Game extends Phaser.Scene {
 
 
   update() {
-    
+
 
   }
 

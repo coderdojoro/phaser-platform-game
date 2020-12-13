@@ -11,8 +11,11 @@
 		"git.enableSmartCommit": true,
         "editor.snippetSuggestions": "top",
         "editor.autoSurround": "never",
-        "files.autoSave": "onFocusChange"
-        //"files.autoSave": "afterDelay",
-        //"files.autoSaveDelay": 900
+        //"files.autoSave": "onFocusChange"
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000,
+        "[javascript]": {
+            "editor.formatOnSave": true
+        }
     }
 }
