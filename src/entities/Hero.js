@@ -6,7 +6,8 @@ class Hero extends Phaser.GameObjects.Sprite {
 
     static HeroTypes = Object.freeze({
         MAGE: "mage",
-        ROGUE: "rogue" 
+        ROGUE: "rogue",
+        KNIGHT: "knight"
     });
 
     keyLeft;
@@ -40,6 +41,9 @@ class Hero extends Phaser.GameObjects.Sprite {
         } else if(this.heroType == Hero.HeroTypes.ROGUE) {
             this.body.setSize(31, 52);
             this.body.setOffset(74, 52);
+        } else if(this.heroType == Hero.HeroTypes.KNIGHT) {
+            this.body.setSize(32, 50);
+            this.body.setOffset(73, 58);
         }
 
         this.body.setCollideWorldBounds(true);
@@ -63,6 +67,12 @@ class Hero extends Phaser.GameObjects.Sprite {
 
     updateHeroState() {
 
+        /*********
+        fix commented this.body.setOffset below (depends on character type)
+        
+        */
+
+
         if(!(this.body instanceof Phaser.Physics.Arcade.Body)) {
             return;
         }
@@ -81,7 +91,7 @@ class Hero extends Phaser.GameObjects.Sprite {
         if (this.keyLeft.isDown && this.keyShift.isUp && isOnFloor) {
             this.body.setMaxVelocity(200, 400);
             this.body.setAccelerationX(-500);
-            this.body.setOffset(171 - 70 - 33, 57);
+            //this.body.setOffset(171 - 70 - 33, 57);
             this.setFlipX(true);
             this.heroState = 'walk';
         }
@@ -89,7 +99,7 @@ class Hero extends Phaser.GameObjects.Sprite {
         if (this.keyLeft.isDown && this.keyShift.isDown && isOnFloor) {
             this.body.setMaxVelocity(400, 400);
             this.body.setAccelerationX(-500);
-            this.body.setOffset(171 - 70 - 33, 57);
+            //this.body.setOffset(171 - 70 - 33, 57);
             this.setFlipX(true);
             this.heroState = 'run';
         }
@@ -97,7 +107,7 @@ class Hero extends Phaser.GameObjects.Sprite {
         if (this.keyRight.isDown && this.keyShift.isUp && isOnFloor) {
             this.body.setMaxVelocity(200, 400);
             this.body.setAccelerationX(500);
-            this.body.setOffset(70, 57);
+            //this.body.setOffset(70, 57);
             this.setFlipX(false);
             this.heroState = 'walk';
 
@@ -106,7 +116,7 @@ class Hero extends Phaser.GameObjects.Sprite {
         if (this.keyRight.isDown && this.keyShift.isDown && isOnFloor) {
             this.body.setMaxVelocity(400, 400);
             this.body.setAccelerationX(500);
-            this.body.setOffset(70, 57);
+            //this.body.setOffset(70, 57);
             this.setFlipX(false);
             this.heroState = 'run';
         }

@@ -6,7 +6,7 @@ import Hero from '../entities/Hero';
 
 class Game extends Phaser.Scene {
 
-  heroType = Hero.HeroTypes.MAGE;
+  heroType = Hero.HeroTypes.KNIGHT;
 
   preload() {
     this.load.image('knight', `assets/${this.heroType}/${this.heroType}.png`);
@@ -17,9 +17,10 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('run-spritesheet', `assets/${this.heroType}/run.png`, { frameWidth: 171, frameHeight: 128 });
     this.load.spritesheet('fall-spritesheet', `assets/${this.heroType}/fall.png`, { frameWidth: 171, frameHeight: 128 });
     this.load.spritesheet('attack-spritesheet', `assets/${this.heroType}/attack.png`, { frameWidth: 171, frameHeight: 128 });
+    this.load.spritesheet('landing-spritesheet', `assets/${this.heroType}/landing.png`, { frameWidth: 171, frameHeight: 128 });
+
     this.load.spritesheet('fire-move-spritesheet', `assets/${this.heroType}/fire-move.png`, { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet('fire-explosion-spritesheet', `assets/${this.heroType}/fire-explosion.png`, { frameWidth: 128, frameHeight: 128 });
-    this.load.spritesheet('landing-spritesheet', `assets/${this.heroType}/landing.png`, { frameWidth: 171, frameHeight: 128 });
 
     this.load.tilemapTiledJSON('level1', 'assets/tilemaps.json');
     this.load.image('level1-sheet', 'assets/tiles/tiles.png ');
