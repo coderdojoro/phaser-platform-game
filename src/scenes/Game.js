@@ -22,14 +22,27 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('fire-move-spritesheet', `assets/${this.heroType}/fire-move.png`, { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet('fire-explosion-spritesheet', `assets/${this.heroType}/fire-explosion.png`, { frameWidth: 128, frameHeight: 128 });
 
-    this.load.tilemapTiledJSON('level1', 'assets/tilemaps.json');
-    this.load.image('level1-sheet', 'assets/tiles/tiles.png ');
-    this.load.image('brush-sheet', 'assets/tiles/brush-and-trees.png');
+    this.load.tilemapTiledJSON('level1', 'assets/tilemaps-forest.json');
+    // this.load.tilemapTiledJSON('level1', 'assets/tilemaps-dark-forest.json');
+    // this.load.tilemapTiledJSON('level1', 'assets/tilemaps-snowy-forest.json');
 
-    this.load.image('background4', 'assets/backgrounds/background4.png');
-    this.load.image('background3', 'assets/backgrounds/background3.png');
-    this.load.image('background2', 'assets/backgrounds/background2.png');
-    this.load.image('background1', 'assets/backgrounds/background1.png');
+    this.load.image('level1-sheet', 'assets/tiles/tiles.png ');
+    this.load.image('brush-sheet', 'assets/tiles/bush-and-trees.png');
+
+    this.load.image('background4', 'assets/backgrounds/forest/background4.png');
+    this.load.image('background3', 'assets/backgrounds/forest/background3.png');
+    this.load.image('background2', 'assets/backgrounds/forest/background2.png');
+    this.load.image('background1', 'assets/backgrounds/forest/background1.png');
+
+    // this.load.image('background4', 'assets/backgrounds/dark-forest/background4.png');
+    // this.load.image('background3', 'assets/backgrounds/dark-forest/background3.png');
+    // this.load.image('background2', 'assets/backgrounds/dark-forest/background2.png');
+    // this.load.image('background1', 'assets/backgrounds/dark-forest/background1.png');
+
+    // this.load.image('background4', 'assets/backgrounds/snowy-forest/background4.png');
+    // this.load.image('background3', 'assets/backgrounds/snowy-forest/background3.png');
+    // this.load.image('background2', 'assets/backgrounds/snowy-forest/background2.png');
+    // this.load.image('background1', 'assets/backgrounds/snowy-forest/background1.png');
 
     this.load.image('keys-text', 'assets/keys.png');
   }
@@ -146,7 +159,7 @@ class Game extends Phaser.Scene {
 
   addMap() {
     this.map = this.make.tilemap({ key: 'level1' });
-    this.groundTiles = this.map.addTilesetImage('level1' /*tileset name from jsom*/, 'level1-sheet');
+    this.groundTiles = this.map.addTilesetImage('level1' /*tileset name from json*/, 'level1-sheet');
     this.groundTiles2 = this.map.addTilesetImage('bushes', 'brush-sheet');
 
     this.background4 = this.map.addTilesetImage('background4', 'background4');
