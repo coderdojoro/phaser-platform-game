@@ -12,4 +12,3 @@ require('http').createServer(function (request, response) {
     }).resume();
 }).listen(PORT);
 
-//"start": "webpack-dev-server --mode development --open",
