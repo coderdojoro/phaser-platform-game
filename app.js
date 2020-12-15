@@ -1,3 +1,5 @@
+// @ts-check
+
 var static = require('node-static');
 
 var fileServer = new static.Server('./dist');
