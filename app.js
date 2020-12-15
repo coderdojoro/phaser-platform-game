@@ -10,3 +10,5 @@ require('http').createServer(function (request, response) {
         fileServer.serve(request, response);
     }).resume();
 }).listen(80);
+
+//"start": "webpack-dev-server --mode development --open",
