@@ -1,6 +1,7 @@
 // @ts-check
 
 var static = require('node-static');
+const PORT = process.env.PORT || 3000
 
 var fileServer = new static.Server('./dist');
 
@@ -9,6 +10,6 @@ require('http').createServer(function (request, response) {
         console.log('serve: ' + request);
         fileServer.serve(request, response);
     }).resume();
-}).listen(80);
+}).listen(PORT);
 
 //"start": "webpack-dev-server --mode development --open",
