@@ -86,7 +86,7 @@ class Hero extends Phaser.GameObjects.Sprite {
 
         if (this.keyLeft.isUp && this.keyRight.isUp && isOnFloor && this.heroState != 'landing') {
             this.body.setAccelerationX(0);
-            if (this.heroState == 'jump' || this.heroState == 'high-jump' || this.heroState == 'fall') {
+            if (this.heroState == 'jump' || this.heroState == 'double-jump' || this.heroState == 'fall') {
                 this.heroState = 'landing';
             } else {
                 this.heroState = 'idle';
@@ -128,19 +128,19 @@ class Hero extends Phaser.GameObjects.Sprite {
 
         var justDown = Phaser.Input.Keyboard.JustDown(this.keySpace);
 
-        if (justDown && this.heroState != 'jump' && this.heroState != 'high-jump' && this.heroState != 'fall') {
+        if (justDown && this.heroState != 'jump' && this.heroState != 'double-jump' && this.heroState != 'fall') {
             this.body.setVelocityY(-250);
             justDown = false;
             this.heroState = 'jump';
         }
         if (justDown && this.heroState == 'jump') {
             this.body.setVelocityY(-400);
-            this.heroState = 'high-jump';
+            this.heroState = 'double-jump';
         }
-        if (!this.body.onFloor() && !(this.heroState == 'jump' || this.heroState == 'high-jump') && this.body.velocity.y > 0 && this.heroState != 'fall' && this.animState != 'attack') {
+        if (!this.body.onFloor() && !(this.heroState == 'jump' || this.heroState == 'double-jump') && this.body.velocity.y > 0 && this.heroState != 'fall' && this.animState != 'attack') {
             this.heroState = 'fall';
         }
-        if (this.heroState == 'jump' || this.heroState == 'high-jump' || this.heroState == 'fall') {
+        if (this.heroState == 'jump' || this.heroState == 'double-jump' || this.heroState == 'fall') {
             if (this.keyRight.isDown) {
                 this.setFlipX(false);
                 this.body.setAccelerationX(500);
@@ -193,8 +193,8 @@ class Hero extends Phaser.GameObjects.Sprite {
             this.animState = 'jump';
             this.anims.play('hero-jump');
         }
-        if (this.heroState == 'high-jump' && this.animState != 'high-jump' && this.animState != 'attack') {
-            this.animState = 'high-jump';
+        if (this.heroState == 'double-jump' && this.animState != 'double-jump' && this.animState != 'attack') {
+            this.animState = 'double-jump';
             this.anims.play('hero-double-jump');
         }
         if (this.heroState == 'fall' && this.animState != 'fall' && this.animState != 'attack') {
