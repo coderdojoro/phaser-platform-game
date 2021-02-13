@@ -178,7 +178,7 @@ class Game extends Phaser.Scene {
     this.map.createStaticLayer('background' /*layer name from json*/, [this.groundTiles, this.groundTiles2]);
 
     this.groudLayer = this.map.createStaticLayer('ground' /*layer name from json*/, this.groundTiles);
-    this.groudLayer.setCollisionBetween(1, 150, true); //64
+    this.groudLayer.setCollisionBetween(this.groundTiles.firstgid, this.groundTiles.firstgid + this.groundTiles.total, true);
 
     this.map.createStaticLayer('foreground' /*layer name from json*/, [this.groundTiles, this.groundTiles2]);
 
